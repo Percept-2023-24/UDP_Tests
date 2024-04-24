@@ -12,3 +12,6 @@ Before using the scripts in this repository, the RapidJSON C++ library must be i
   * `sudo cp -r include/rapidjson/ /usr/include/`
 
 Now, clone this repository to any location to begin using it.
+
+### Miscellaneous
+If encountering "bind failed. Error: Address already in use"
