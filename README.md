@@ -1,6 +1,6 @@
 # UDP_Tests
 
-This repo contains scripts to test UDP communication between a single server and client, with simple strings, txt files, and json files.
+This repo contains scripts to test UDP communication between a single server and client, with simple strings, txt files, and JSON files.
 
 ### Installation
 Before using the scripts in this repository, the RapidJSON C++ library must be installed in order to interact with JSON data.
