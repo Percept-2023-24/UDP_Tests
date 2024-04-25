@@ -14,4 +14,4 @@ Before using the scripts in this repository, the RapidJSON C++ library must be i
 Now, clone this repository to any location to begin using it.
 
 ### Miscellaneous
-If encountering "bind failed. Error: Address already in use"
+If encountering `bind failed. Error: Address already in use`, use `netstat -tulpn` to view running processes and `kill -9 <pid>` to kill the processes occupying the desired address.
