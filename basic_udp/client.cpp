@@ -8,6 +8,7 @@
 #include <arpa/inet.h> 
 #include <netinet/in.h> 
 
+#define IP			"172.31.27.134"
 #define PORT	    8080 
 #define MAXLINE     1024 
 
@@ -29,7 +30,7 @@ int main() {
 	// Filling server information 
 	servaddr.sin_family = AF_INET; 
 	servaddr.sin_port = htons(PORT); 
-	servaddr.sin_addr.s_addr = INADDR_ANY; 
+	servaddr.sin_addr.s_addr = inet_addr(IP); 
 	
 	int n;
 	socklen_t len; 

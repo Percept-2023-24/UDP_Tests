@@ -8,6 +8,7 @@
 #include <arpa/inet.h> 
 #include <netinet/in.h> 
 
+#define IP			"172.31.27.134"
 #define PORT	    8080 
 #define MAXLINE     1024 
 // #define IP "..."
@@ -30,7 +31,7 @@ int main() {
 	
 	// Filling server information 
 	servaddr.sin_family = AF_INET; // IPv4 
-	servaddr.sin_addr.s_addr = INADDR_ANY; //change to inet_addr(IP) when doing UDP to a specific IP
+	servaddr.sin_addr.s_addr = inet_addr(IP); //change to inet_addr(IP) when doing UDP to a specific IP
 	servaddr.sin_port = htons(PORT); 
 	
 	// Bind the socket with the server address 
