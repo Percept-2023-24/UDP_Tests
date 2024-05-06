@@ -8,10 +8,9 @@
 #include <arpa/inet.h> 
 #include <netinet/in.h> 
 
-#define IP			"169.231.210.134"	//server IP
+#define IP			"169.231.210.52"	//server IP
 #define PORT	    1200 
 #define MAXLINE     1024 
-// #define IP "..."
 
 // Driver code 
 int main() { 
@@ -31,7 +30,7 @@ int main() {
 	
 	// Filling server information 
 	servaddr.sin_family = AF_INET; // IPv4 
-	servaddr.sin_addr.s_addr = inet_addr(IP); //change to inet_addr(IP) when doing UDP to a specific IP
+	servaddr.sin_addr.s_addr = inet_addr(IP); //inet_addr(IP) for specific IP
 	servaddr.sin_port = htons(PORT); 
 	
 	// Bind the socket with the server address 
@@ -49,7 +48,12 @@ int main() {
 
 	n = recvfrom(sockfd, (char *)buffer, MAXLINE, MSG_WAITALL, ( struct sockaddr *) &cliaddr, &len); 
 	buffer[n] = '\0'; 
-	printf("Client : %s\n", buffer); 
+	printf("%s\n", buffer);
+
+	n = recvfrom(sockfd, (char *)buffer, MAXLINE, MSG_WAITALL, ( struct sockaddr *) &cliaddr, &len); 
+	buffer[n] = '\0'; 
+	printf("%s\n", buffer);
+
 	sendto(sockfd, (const char *)hello, strlen(hello), MSG_CONFIRM, (const struct sockaddr *) &cliaddr, len); 
 	std::cout<<"Server message sent."<<std::endl; 
 	
