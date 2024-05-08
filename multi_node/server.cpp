@@ -69,6 +69,7 @@ int main() {
 	std::cout<<"Checking Connection"<<std::endl;
 
 	bool connection = false;
+	char *comp;
 
 	// Receive client responses and print to console
 	socklen_t len = sizeof(cliaddr); // len is value/result
@@ -77,12 +78,17 @@ int main() {
 	printf("%s\n", response);
 	if (response == "Node 1 Up") {
 		connection = true;
+		comp = "Node 2 Up";
+	}
+	else if (response == "Node 2 Up") {
+		connection = true;
+		comp = "Node 1 Up";
 	}
 
 	n = recvfrom(sockfd, (char *)response, SIZE, MSG_WAITALL, (struct sockaddr *) &cliaddr, &len); 
 	response[n] = '\0'; 
 	printf("%s\n", response);
-	if (response != "Node 2 Up") {
+	if (response != comp) {
 		connection = false;
 	}
 
@@ -91,6 +97,7 @@ int main() {
 		sendto(sockfd, (const char *)hello, strlen(hello), MSG_CONFIRM, (const struct sockaddr *) &cliaddr, len); 
 		std::cout<<"Application Running"<<std::endl; 
 	}
+	std::cout<<"Test"<<std::endl; 
 	
 	return 0; 
 }
