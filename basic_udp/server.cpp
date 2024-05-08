@@ -8,7 +8,7 @@
 #include <arpa/inet.h> 
 #include <netinet/in.h> 
 
-#define IP			"169.231.210.134"	//server IP
+#define IP			"127.0.0.1"	//server IP
 #define PORT	    1200 
 #define MAXLINE     1024 
 // #define IP "..."
@@ -49,7 +49,7 @@ int main() {
 
 	n = recvfrom(sockfd, (char *)buffer, MAXLINE, MSG_WAITALL, ( struct sockaddr *) &cliaddr, &len); 
 	buffer[n] = '\0'; 
-	printf("Client : %s\n", buffer); 
+	printf("Client: %s\n", buffer); 
 	sendto(sockfd, (const char *)hello, strlen(hello), MSG_CONFIRM, (const struct sockaddr *) &cliaddr, len); 
 	std::cout<<"Server message sent."<<std::endl; 
 	

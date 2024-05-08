@@ -15,8 +15,8 @@
 // Driver code 
 int main() { 
 	int sockfd; 
-	char buffer[MAXLINE]; 
-	const char *hello = "Hello from Node 1"; 
+	char response[MAXLINE]; 
+	const char *hello = "Node 1 Up"; 
 	struct sockaddr_in servaddr; 
 
 	// Creating socket file descriptor 
@@ -31,16 +31,15 @@ int main() {
 	servaddr.sin_family = AF_INET; 
 	servaddr.sin_port = htons(PORT); 
 	servaddr.sin_addr.s_addr = inet_addr(IP); 
-	
-	int n;
+
 	socklen_t len; 
 	
 	sendto(sockfd, (const char *)hello, strlen(hello), MSG_CONFIRM, (const struct sockaddr *) &servaddr, sizeof(servaddr)); 
 	std::cout<<"Client message sent."<<std::endl; 
 		
-	n = recvfrom(sockfd, (char *)buffer, MAXLINE, MSG_WAITALL, (struct sockaddr *) &servaddr, &len); 
-	buffer[n] = '\0'; 
-	std::cout<<"Server :"<<buffer<<std::endl; 
+	int n = recvfrom(sockfd, (char *)response, MAXLINE, MSG_WAITALL, (struct sockaddr *) &servaddr, &len); 
+	response[n] = '\0'; 
+	std::cout<<"Server: "<<response<<std::endl; 
 
 	close(sockfd); 
 	return 0; 

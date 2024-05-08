@@ -8,8 +8,8 @@
 #include <arpa/inet.h> 
 #include <netinet/in.h> 
 
-#define IP			"172.31.27.134"
-#define PORT	    8080 
+#define IP			"127.0.0.1"
+#define PORT	    1200
 #define MAXLINE     1024 
 
 // Driver code 
@@ -40,7 +40,7 @@ int main() {
 		
 	n = recvfrom(sockfd, (char *)buffer, MAXLINE, MSG_WAITALL, (struct sockaddr *) &servaddr, &len); 
 	buffer[n] = '\0'; 
-	std::cout<<"Server :"<<buffer<<std::endl; 
+	std::cout<<"Server: "<<buffer<<std::endl; 
 
 	close(sockfd); 
 	return 0; 
