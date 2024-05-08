@@ -2,11 +2,13 @@
 #include <bits/stdc++.h> 
 #include <stdlib.h> 
 #include <unistd.h> 
-#include <string.h> 
+#include <string> 
 #include <sys/types.h> 
 #include <sys/socket.h> 
 #include <arpa/inet.h> 
 #include <netinet/in.h> 
+
+using namespace std;
 
 #define IP			"169.231.210.52"
 #define PORT	    1200 

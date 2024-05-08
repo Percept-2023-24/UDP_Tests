@@ -2,15 +2,17 @@
 #include <bits/stdc++.h> 
 #include <stdlib.h> 
 #include <unistd.h> 
-#include <string.h> 
 #include <sys/types.h> 
 #include <sys/socket.h> 
 #include <arpa/inet.h> 
 #include <netinet/in.h> 
+#include <string>
 
 #define IP			"169.231.210.52"	// server IP
 #define PORT	    1200 
 #define SIZE     	1024 
+
+using namespace std;
 
 void write_file(int sockfd, struct sockaddr_in addr) {
 	const char *filename = "server_data.json";
@@ -69,7 +71,7 @@ int main() {
 	std::cout<<"Checking Connection"<<std::endl;
 
 	bool connection = false;
-	char *comp;
+	string comp;
 
 	// Receive client responses and print to console
 	socklen_t len = sizeof(cliaddr); // len is value/result
