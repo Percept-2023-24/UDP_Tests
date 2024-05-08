@@ -78,11 +78,11 @@ int main() {
     int n = recvfrom(sockfd, (char *)response, SIZE, MSG_WAITALL, (struct sockaddr *) &cliaddr, &len); 
 	response[n] = '\0'; 
 	printf("%s\n", response);
-	if (response == "Node 1 Up") {
+	if (strcmp(response, "Node 1 Up")==0) {
 		connection = true;
 		comp = "Node 2 Up";
 	}
-	else if (response == "Node 2 Up") {
+	else if (strcmp(response, "Node 2 Up")==0) {
 		connection = true;
 		comp = "Node 1 Up";
 	}
@@ -90,7 +90,7 @@ int main() {
 	n = recvfrom(sockfd, (char *)response, SIZE, MSG_WAITALL, (struct sockaddr *) &cliaddr, &len); 
 	response[n] = '\0'; 
 	printf("%s\n", response);
-	if (response != comp) {
+	if (strcmp(response, comp.c_str()) != 0) {
 		connection = false;
 	}
 
@@ -98,8 +98,7 @@ int main() {
 	if (connection) {
 		sendto(sockfd, (const char *)hello, strlen(hello), MSG_CONFIRM, (const struct sockaddr *) &cliaddr, len); 
 		std::cout<<"Application Running"<<std::endl; 
-	}
-	std::cout<<"Test"<<std::endl; 
+	} 
 	
 	return 0; 
 }

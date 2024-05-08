@@ -37,7 +37,7 @@ int main() {
 	socklen_t len; 
 	
 	sendto(sockfd, (const char *)hello, strlen(hello), MSG_CONFIRM, (const struct sockaddr *) &servaddr, sizeof(servaddr)); 
-	std::cout<<"Client message sent."<<std::endl; 
+	std::cout<<"Connection Confirmed"<<std::endl; 
 		
 	int n = recvfrom(sockfd, (char *)response, MAXLINE, MSG_WAITALL, (struct sockaddr *) &servaddr, &len); 
 	response[n] = '\0'; 
