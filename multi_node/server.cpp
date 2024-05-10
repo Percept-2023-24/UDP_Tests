@@ -68,7 +68,7 @@ int main() {
 	} 
 
 	// Print connection checking to console
-	printf("Checking Connection ...\n");
+	printf("Checking Connection...\n");
 
 	bool connection = false;
 	string comp;
@@ -77,19 +77,19 @@ int main() {
 	socklen_t len = sizeof(cliaddr); // len is value/result
     int n = recvfrom(sockfd, (char *)response, SIZE, MSG_WAITALL, (struct sockaddr *) &cliaddr, &len); 
 	response[n] = '\0'; 
-	printf("%s\n", response);
+	printf("--> %s\n", response);
 	if (strcmp(response, "Node 1 Up")==0) {
 		connection = true;
-		comp = "--> Node 2 Up";
+		comp = "Node 2 Up";
 	}
 	else if (strcmp(response, "Node 2 Up")==0) {
 		connection = true;
-		comp = "--> Node 1 Up";
+		comp = "Node 1 Up";
 	}
 
 	n = recvfrom(sockfd, (char *)response, SIZE, MSG_WAITALL, (struct sockaddr *) &cliaddr, &len); 
 	response[n] = '\0'; 
-	printf("%s\n", response);
+	printf("--> %s\n", response);
 	if (strcmp(response, comp.c_str()) != 0) {
 		connection = false;
 	}
@@ -98,9 +98,9 @@ int main() {
 	if (connection) {
 		sendto(sockfd, (const char *)init_msg, strlen(init_msg), MSG_CONFIRM, (const struct sockaddr *) &cliaddr, len); 
 		printf("Connection Successful\n");
-		cout << "[Enter] to run demo ...";
+		cout << "[Enter] to run demo...";
 		if (cin.get() == '\n') {
-			printf("Running demo ...\n");
+			printf("Running demo...\n");
 		}
 	}
 	
