@@ -16,7 +16,7 @@
 int main() { 
 	int sockfd; 
 	char response[MAXLINE]; 
-	const char *hello = "Node 2 Up"; 
+	const char *init_msg = "Node 2 Up"; 
 	struct sockaddr_in	 servaddr; 
 
 	// Creating socket file descriptor 
@@ -35,12 +35,12 @@ int main() {
 	int n;
 	socklen_t len; 
 	
-	sendto(sockfd, (const char *)hello, strlen(hello), MSG_CONFIRM, (const struct sockaddr *) &servaddr, sizeof(servaddr)); 
-	std::cout<<"Connection Confirmed"<<std::endl; 
+	sendto(sockfd, (const char *)init_msg, strlen(init_msg), MSG_CONFIRM, (const struct sockaddr *) &servaddr, sizeof(servaddr)); 
+	printf("Pinging Server"); 
 		
 	n = recvfrom(sockfd, (char *)response, MAXLINE, MSG_WAITALL, (struct sockaddr *) &servaddr, &len); 
 	response[n] = '\0'; 
-	std::cout<<"Server: "<<response<<std::endl; 
+	printf("%s\n", response);
 
 	close(sockfd); 
 	return 0; 

@@ -44,7 +44,7 @@ void write_file(int sockfd, struct sockaddr_in addr) {
 int main() { 
 	int sockfd; 
 	char response[SIZE];
-	const char *hello = "Start Application";
+	const char *init_msg = "Server Up";
 	struct sockaddr_in servaddr, cliaddr;
 	
 	// Creating socket file descriptor 
@@ -96,9 +96,13 @@ int main() {
 
 	// Send response to clients
 	if (connection) {
-		sendto(sockfd, (const char *)hello, strlen(hello), MSG_CONFIRM, (const struct sockaddr *) &cliaddr, len); 
-		std::cout<<"Application Running"<<std::endl; 
-	} 
+		sendto(sockfd, (const char *)init_msg, strlen(init_msg), MSG_CONFIRM, (const struct sockaddr *) &cliaddr, len); 
+		printf("Connection Successful");
+		cout << "[Enter] to run demo ...";
+		if (cin.get() == '\n') {
+			printf("Running demo ...");
+		}
+	}
 	
 	return 0; 
 }
