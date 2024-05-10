@@ -80,11 +80,11 @@ int main() {
 	printf("%s\n", response);
 	if (strcmp(response, "Node 1 Up")==0) {
 		connection = true;
-		comp = "Node 2 Up";
+		comp = "--> Node 2 Up";
 	}
 	else if (strcmp(response, "Node 2 Up")==0) {
 		connection = true;
-		comp = "Node 1 Up";
+		comp = "--> Node 1 Up";
 	}
 
 	n = recvfrom(sockfd, (char *)response, SIZE, MSG_WAITALL, (struct sockaddr *) &cliaddr, &len); 

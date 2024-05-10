@@ -36,7 +36,7 @@ int main() {
 	socklen_t len; 
 	
 	sendto(sockfd, (const char *)init_msg, strlen(init_msg), MSG_CONFIRM, (const struct sockaddr *) &servaddr, sizeof(servaddr)); 
-	printf("Pinging Server\n"); 
+	printf("Pinging Server ...\n"); 
 		
 	n = recvfrom(sockfd, (char *)response, MAXLINE, MSG_WAITALL, (struct sockaddr *) &servaddr, &len); 
 	response[n] = '\0'; 
