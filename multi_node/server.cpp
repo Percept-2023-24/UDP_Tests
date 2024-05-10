@@ -68,7 +68,7 @@ int main() {
 	} 
 
 	// Print connection checking to console
-	std::cout<<"Checking Connection"<<std::endl;
+	printf("Checking Connection ...\n");
 
 	bool connection = false;
 	string comp;
@@ -97,10 +97,10 @@ int main() {
 	// Send response to clients
 	if (connection) {
 		sendto(sockfd, (const char *)init_msg, strlen(init_msg), MSG_CONFIRM, (const struct sockaddr *) &cliaddr, len); 
-		printf("Connection Successful");
+		printf("Connection Successful\n");
 		cout << "[Enter] to run demo ...";
 		if (cin.get() == '\n') {
-			printf("Running demo ...");
+			printf("Running demo ...\n");
 		}
 	}
 	
