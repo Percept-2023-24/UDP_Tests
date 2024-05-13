@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
+#include <bits/stdc++.h> 
+#include <string>
 #include <unistd.h>
 #include <arpa/inet.h>
 #include "rapidjson/document.h" 
@@ -9,8 +10,9 @@
 #include <fstream> 
 #include <iostream> 
 
-#define IP		"127.0.0.1"
-#define PORT 	8080
+#define IP		"127.0.0.1"			// localhost
+//#define IP		"169.231.210.52" 	// server
+#define PORT 	1200
 #define SIZE 	1024
 
 using namespace rapidjson;
@@ -18,13 +20,13 @@ using namespace std;
 
 void write_json(char* fname, int angle, int range) {
 	Document d; 
-	d.SetObject(); 
+	d.SetObject();
 
 	// Add data to the JSON document 
 	d.AddMember("angle", angle, d.GetAllocator()); 
 	d.AddMember("range", range, d.GetAllocator());
 
-	// Open the output file 
+	// Open the output file
 	FILE* fp = fopen(fname, "w");
 
 	// Write the JSON data to the file
@@ -42,9 +44,9 @@ void send_file_data(int sockfd, struct sockaddr_in addr) {
 
 	// Collect sample frame data
 	cout << "Enter filename: ";
-	char* fname;
+	string fname;
 	cin >> fname;
-	fname = strcat(fname, ".json");
+	string fname_full = strcat(fname.data(), ".json");
 
 	cout << "Enter angle: ";
 	int angle_in;
@@ -55,8 +57,8 @@ void send_file_data(int sockfd, struct sockaddr_in addr) {
 	cin >> range_in;
 
 	// Create JSON file with frame data
-	write_json(fname, angle_in, range_in);
-	FILE* fp_in = fopen(fname, "r");
+	write_json(fname_full.data(), angle_in, range_in);
+	FILE* fp_in = fopen(fname_full.c_str(), "r");
 
 	// Reading the text file
 	if (fp_in == NULL) {
@@ -97,8 +99,8 @@ int main(void) {
 	}
 
 	server_addr.sin_family = AF_INET;
-	server_addr.sin_port = PORT;
 	server_addr.sin_addr.s_addr = inet_addr(IP);
+	server_addr.sin_port = PORT;
 
 	// Sending the file data to the server
 	send_file_data(server_sockfd, server_addr);

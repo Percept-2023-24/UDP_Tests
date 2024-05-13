@@ -5,8 +5,9 @@
 #include <arpa/inet.h>
 #include <typeinfo>
 
-#define IP		"127.0.0.1"
-#define PORT 	8080
+#define IP		"127.0.0.1"			// localhost
+//#define IP		"169.231.210.52" 	// server
+#define PORT 	1200
 #define SIZE 	1024
 
 void write_file(int sockfd, struct sockaddr_in addr) {
@@ -32,7 +33,6 @@ void write_file(int sockfd, struct sockaddr_in addr) {
 		fprintf(fp, "%s", buffer);
 		bzero(buffer, SIZE);
 	}
-
 	fclose(fp);
 }
 
@@ -51,8 +51,8 @@ int main() {
 		exit(1);
 	}
 	server_addr.sin_family = AF_INET;
-	server_addr.sin_port = PORT;
 	server_addr.sin_addr.s_addr = inet_addr(IP);
+	server_addr.sin_port = PORT;
 
 	e = bind(server_sockfd, (struct sockaddr*)&server_addr, sizeof(server_addr));
 	
