@@ -18,12 +18,18 @@
 using namespace rapidjson;
 using namespace std;
 
+
 void write_json(char* fname, int angle, int range) {
+	const char *node = "Patrick";
+	Value s;
+	s.SetString(StringRef(node));
+
 	Document d; 
 	d.SetObject();
 
-	// Add data to the JSON document 
-	d.AddMember("angle", angle, d.GetAllocator()); 
+	// Add data to the JSON document
+	d.AddMember("Node", s, d.GetAllocator()); 
+	d.AddMember("angle", angle, d.GetAllocator());
 	d.AddMember("range", range, d.GetAllocator());
 
 	// Open the output file

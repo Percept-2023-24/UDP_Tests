@@ -1,24 +1,34 @@
+#include <bits/stdc++.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
+#include <string>
 #include <unistd.h>
 #include <arpa/inet.h>
 #include <typeinfo>
+#include <fmt/core.h>
 
-#define IP		"127.0.0.1"			// localhost
-//#define IP		"169.231.210.52" 	// server
+#define FMT_HEADER_ONLY
+#include <fmt/format.h>
+//#define IP		"127.0.0.1"			// localhost
+#define IP		"169.231.210.52" 	// server
 #define PORT 	1200
 #define SIZE 	1024
 
-void write_file(int sockfd, struct sockaddr_in addr) {
+using namespace std;
+using namespace fmt;
 
-	const char *filename = "server_data.json";
+int frame = 1, num_frames = 10;
+
+void write_file(int sockfd, struct sockaddr_in addr) {
+	string fname;
+	string node;
+	string path = "/home/aditya/Programming/Capstone/UDP_Tests/json_udp/frame_data";
 	int n;
 	char buffer[SIZE];
 	socklen_t addr_size;
 
 	// Creating a file.
-	FILE* fp = fopen(filename, "w");
+	FILE* fp;
 
 	// Receiving the data and writing it into the file.
 	while (1) {
@@ -29,7 +39,12 @@ void write_file(int sockfd, struct sockaddr_in addr) {
 			break;
 		}
 
-		printf("[RECEVING] Data: %s", buffer);
+		printf("Receiving: %s\n", buffer);
+
+		node = (buffer[9] == 'M') ? "Mike" : "Patrick";	// set node name based on incoming data
+		fname = format("{}/{}_Frame{}.json", path, node, frame);
+
+		fp = fopen(fname.c_str(), "w");
 		fprintf(fp, "%s", buffer);
 		bzero(buffer, SIZE);
 	}
@@ -61,13 +76,16 @@ int main() {
 		exit(1);
 	}
 
-	printf("[STARTING] UDP File Server started. \n");
-	write_file(server_sockfd, client_addr);
+	printf("UDP File Server started.\n\n");
 
-	printf("\n[SUCCESS] Data transfer complete.\n");
-	printf("[CLOSING] Closing the server.\n");
+	while (frame <= num_frames) {
+		write_file(server_sockfd, client_addr);
+		frame++;
+	}
+	
+	printf("\n\nData transfer complete.\n");
+	printf("Closing the server.\n");
 
 	close(server_sockfd);
-
 	return 0;
 }

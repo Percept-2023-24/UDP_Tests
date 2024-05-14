@@ -36,7 +36,6 @@ void write_file(int sockfd, struct sockaddr_in addr) {
 		fprintf(fp, "%s", response);
 		bzero(response, SIZE);
 	}
-
 	fclose(fp);
 }
 
