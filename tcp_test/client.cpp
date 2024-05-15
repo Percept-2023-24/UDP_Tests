@@ -15,8 +15,9 @@
 #include <fcntl.h>
 #include <fstream>
 
-#define IP			"127.0.0.1"	// localhost
-#define PORT	    8080 
+//#define IP			"127.0.0.1"	// localhost
+#define IP			"169.231.222.39"	
+#define PORT	    1200  
 #define MAXLINE    	1024
 
 using namespace std;
