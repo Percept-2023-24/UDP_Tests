@@ -11,7 +11,6 @@
 #define IP			"127.0.0.1"	//server IP
 #define PORT	    1200 
 #define MAXLINE     1024 
-// #define IP "..."
 
 // Driver code 
 int main() { 
@@ -21,7 +20,7 @@ int main() {
 	struct sockaddr_in servaddr, cliaddr; 
 	
 	// Creating socket file descriptor 
-	if ( (sockfd = socket(AF_INET, SOCK_DGRAM, 0)) < 0 ) { 
+	if ((sockfd = socket(AF_INET, SOCK_DGRAM, 0)) < 0) { 
 		perror("socket creation failed"); 
 		exit(EXIT_FAILURE); 
 	} 
@@ -35,8 +34,7 @@ int main() {
 	servaddr.sin_port = htons(PORT); 
 	
 	// Bind the socket with the server address 
-	if ( bind(sockfd, (const struct sockaddr *)&servaddr, 
-			sizeof(servaddr)) < 0 ) 
+	if (bind(sockfd, (const struct sockaddr *)&servaddr, sizeof(servaddr)) < 0) 
 	{ 
 		perror("bind failed"); 
 		exit(EXIT_FAILURE); 

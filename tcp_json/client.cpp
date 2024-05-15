@@ -8,15 +8,18 @@
 #include "rapidjson/filewritestream.h" 
 #include "rapidjson/writer.h" 
 #include <fstream> 
-#include <iostream>
+#include <iostream> 
 #include <fmt/core.h>
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <netinet/in.h>
 
 #define FMT_HEADER_ONLY
 #include <fmt/format.h>
-#define IP		"127.0.0.1"			// localhost
+#define IP			"127.0.0.1"			// localhost
 //#define IP		"169.231.210.52" 	// server
-#define PORT 	1200
-#define SIZE 	1024
+#define PORT 		1200
+#define MAXLINE		1024
 
 using namespace rapidjson;
 using namespace std;
@@ -44,7 +47,7 @@ void write_json(string fname, int angle, int range) {
 
 void send_file_data(int sockfd, struct sockaddr_in addr) {
 	int n;
-	char buffer[SIZE];
+	char buffer[MAXLINE];
 
 	// Collect sample frame data
 	cout << "Enter filename: ";
@@ -67,52 +70,56 @@ void send_file_data(int sockfd, struct sockaddr_in addr) {
 	// Reading the text file
 	if (fp_in == NULL) {
 		perror("[ERROR] reading the file");
-		exit(1);
+		exit(EXIT_FAILURE);
 	}
 	
 	// Sending the data
-	while (fgets(buffer, SIZE, fp_in) != NULL) {
+	while (fgets(buffer, MAXLINE, fp_in) != NULL) {
 		printf("[SENDING] Data: %s", buffer);
 
-		n = sendto(sockfd, buffer, SIZE, 0, (struct sockaddr*)&addr, sizeof(addr));
+		n = sendto(sockfd, buffer, MAXLINE, 0, (struct sockaddr*)&addr, sizeof(addr));
 		if (n == -1) {
 			perror("[ERROR] sending data to the server.");
-			exit(1);
+			exit(EXIT_FAILURE);
 		}
-		bzero(buffer, SIZE);
+		memset(&buffer, 0, sizeof(buffer));
 	}
 
 	// Sending the 'END'
 	strcpy(buffer, "END");
-	sendto(sockfd, buffer, SIZE, 0, (struct sockaddr*)&addr, sizeof(addr));
-
+	send(sockfd, (char*)&buffer, strlen(buffer), 0);
 	fclose(fp_in);
 }
 
 int main(void) {
-
 	// Defining variables
-	int server_sockfd;
-	struct sockaddr_in server_addr;
+	struct sockaddr_in servaddr;
 
-	// Creating a UDP socket
-	server_sockfd = socket(AF_INET, SOCK_DGRAM, 0);
-	if (server_sockfd < 0) {
+	memset(&servaddr, 0, sizeof(servaddr)); 
+
+	servaddr.sin_family = AF_INET;
+	servaddr.sin_addr.s_addr = inet_addr(IP);
+	servaddr.sin_port = htons(PORT);
+
+	// Creating a TCP socket
+	int clientSd = socket(AF_INET, SOCK_STREAM, 0);
+	if (clientSd < 0) {
 		perror("[ERROR] socket error");
-		exit(1);
+		exit(EXIT_FAILURE);
 	}
-
-	server_addr.sin_family = AF_INET;
-	server_addr.sin_addr.s_addr = inet_addr(IP);
-	server_addr.sin_port = PORT;
+	if(connect(clientSd, (sockaddr*) &servaddr, sizeof(servaddr)) < 0) {
+        printf("Error Connecting To Socket!");
+        exit(EXIT_FAILURE);
+    }
+    printf("Connected to the server!\n");
 
 	// Sending the file data to the server
-	send_file_data(server_sockfd, server_addr);
+	send_file_data(clientSd, servaddr);
 
-	printf("\n[SUCCESS] Data transfer complete.\n");
-	printf("[CLOSING] Disconnecting from the server.\n");
+	printf("\nData transfer complete.\n");
+	printf("Disconnecting from the server.\n");
 
-	close(server_sockfd);
+	close(clientSd);
 
 	return 0;
 }

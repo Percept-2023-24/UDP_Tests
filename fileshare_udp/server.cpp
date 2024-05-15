@@ -5,7 +5,7 @@
 #include <arpa/inet.h>
 
 #define IP		"127.0.0.1"
-#define PORT 	8080
+#define PORT 	1200
 #define SIZE 	1024
 
 void write_file(int sockfd, struct sockaddr_in addr) {

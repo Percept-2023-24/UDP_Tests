@@ -17,7 +17,7 @@ int main() {
 	int sockfd; 
 	char buffer[MAXLINE]; 
 	const char *hello = "Hello from Client"; 
-	struct sockaddr_in	 servaddr; 
+	struct sockaddr_in servaddr; 
 
 	// Creating socket file descriptor 
 	if ( (sockfd = socket(AF_INET, SOCK_DGRAM, 0)) < 0 ) { 
