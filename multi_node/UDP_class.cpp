@@ -1,4 +1,3 @@
-// Multi-node Application (Server side) 
 #include <stdio.h>
 #include <bits/stdc++.h> 
 #include <stdlib.h> 

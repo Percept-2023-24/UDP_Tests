@@ -53,7 +53,7 @@ int main() {
 	servaddr.sin_addr.s_addr = inet_addr(IP);
 	servaddr.sin_port = htons(PORT);
 
-	// Creating a TCP socket
+	// Create a TCP socket
 	int sockfd = socket(AF_INET, SOCK_STREAM, 0);
 	if (sockfd < 0) {
 		perror("[ERROR] socket error");
