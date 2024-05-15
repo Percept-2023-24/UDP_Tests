@@ -14,9 +14,9 @@
 #include <fstream> 
 #include <iostream>
 
-#define IP			"169.231.210.52"	// server IP
-#define SERVER_PORT	1200 
-#define MAXLINE 	1024 
+#define IP				"169.231.222.39" // server IP
+#define SERVER_PORT		1200 
+#define MAXLINE 		1024
 
 using namespace std;
 using namespace std::chrono;
@@ -25,24 +25,31 @@ using namespace rapidjson;
 class JSON_UDP {
     int frame = 1;
     const char *node = "Mike";    // Patrick or Mike
+    int clientSd;
+    struct sockaddr_in servaddr;
+    Value s;
+	FILE* fp;
+	FILE* fp_in;
+	string fname;
+	char buffer[MAXLINE];
+	int n;
+	const char *exit_msg = "Demo Complete";
     
 	public:
-		string write_json(float angle, auto duration) {
+		void write_json(string fname, float angle, auto duration) {
 		    Document d; 
 		    d.SetObject();
-			Value s;
-			s.SetString(StringRef(node)); 
+		    s.SetString(StringRef(node));
 
 		    // Add data to the JSON document
 		    d.AddMember("Node", s, d.GetAllocator());
 		    d.AddMember("Frame Number", frame, d.GetAllocator());
-		    d.AddMember("Elapsed Time (us)", duration.count(), d.GetAllocator());
+		    d.AddMember("Elapsed Time (ms)", duration.count(), d.GetAllocator());
 		    d.AddMember("Angle", angle, d.GetAllocator()); 
 		    //d.AddMember("range", range, d.GetAllocator());
 
 		    // Open the output file
-		    string fname = format("%s_Frame%d.json", node, frame); 
-		    FILE* fp = fopen(fname.c_str(), "w");
+		    fp = fopen(fname.c_str(), "w");
 
 		    // Write the JSON data to the file
 		    char writeBuffer[65536]; 
@@ -51,66 +58,77 @@ class JSON_UDP {
 		    d.Accept(writer);
 
 		    fclose(fp);
-		    return fname;
 		}
 
-		void send_file_data(int sockfd, struct sockaddr_in addr, string fname) {
-		    int n;
-		    char buffer[MAXLINE];
+		void send_file_data(string fname, float angle, auto duration) {
+			write_json(fname, angle, duration);    	// Write JSON file with angle data
+		    fp_in = fopen(fname.c_str(), "r");		// Read JSON file with angle data
 
-		    // Read JSON file with frame data
-		    FILE* fp_in = fopen(fname.c_str(), "r");
-
-		    // Reading the text file
+		    // Read the text file
 		    if (fp_in == NULL) {
-		        perror("[ERROR] reading the file");
-		        exit(1);
+		        perror("[ERROR] reading the file\n");
+		        exit(EXIT_FAILURE);
 		    }
 		    
-		    // Sending the data
+		    // Send the data
+		    memset(&buffer, 0, sizeof(buffer));
 		    while (fgets(buffer, MAXLINE, fp_in) != NULL) {
 		        printf("\nSending: %s", buffer);
 
-		        n = sendto(sockfd, buffer, MAXLINE, 0, (struct sockaddr*)&addr, sizeof(addr));
+		        n = sendto(clientSd, buffer, MAXLINE, 0, (struct sockaddr*)&servaddr, sizeof(servaddr));
 		        if (n == -1) {
-		            perror("[ERROR] sending data to the server.");
-		            exit(1);
+		            perror("[ERROR] sending data to the server.\n");
+		            exit(EXIT_FAILURE);
 		        }
-		        bzero(buffer, MAXLINE);
+		        memset(&buffer, 0, sizeof(buffer));
 		    }
 
-		    // Sending the 'END'
+		    // Send the 'END'
 		    strcpy(buffer, "END");
-		    sendto(sockfd, buffer, MAXLINE, 0, (struct sockaddr*)&addr, sizeof(addr));
-
+		    sendto(clientSd, buffer, MAXLINE, 0, (struct sockaddr*)&servaddr, sizeof(servaddr));
 		    fclose(fp_in);
+		}
+		
+		int socket_setup() {
+			memset(&servaddr, 0, sizeof(servaddr));
+		    
+		    // Socket address properties
+		    servaddr.sin_family = AF_INET;
+			servaddr.sin_addr.s_addr = inet_addr(IP);
+		    servaddr.sin_port = htons(SERVER_PORT);
+		    
+		    // Create a TCP socket
+		    clientSd = socket(AF_INET, SOCK_STREAM, 0);
+		    if (clientSd < 0) {
+		        perror("[ERROR] socket error\n");
+		        exit(EXIT_FAILURE);
+		    }
+		    printf("Client Setup Complete...\n");
+		    
+		    if (connect(clientSd, (sockaddr*) &servaddr, sizeof(servaddr)) < 0) {
+		    	printf("Error Connecting To Socket!\n");
+		    	exit(EXIT_FAILURE);
+		    }
+		    printf("Connected To Server!\n");
+		    return 1;
 		}
 
 		void process(float angle, auto start_time) {
 		    auto stop = chrono::high_resolution_clock::now();
-		    auto duration_udp_process = duration_cast<microseconds>(stop - start_time);
-
-		    // Defining variables
-		    int server_sockfd;
-		    struct sockaddr_in server_addr;
-
-		    // Creating a UDP socket
-		    server_sockfd = socket(AF_INET, SOCK_DGRAM, 0);
-		    if (server_sockfd < 0) {
-		        perror("[ERROR] socket error");
-		        exit(1);
-		    }
-
-		    // Socket address properties
-		    server_addr.sin_family = AF_INET;
-		    server_addr.sin_port = SERVER_PORT;
-		    server_addr.sin_addr.s_addr = inet_addr(IP);
-
-		    string fname = write_json(angle, duration_udp_process);    // Write JSON file with angle data
-		    send_file_data(server_sockfd, server_addr, fname);         // Sending the file data to the server
-
+		    auto duration_udp_process = duration_cast<milliseconds>(stop - start_time);		    
+		    
+			fname = format("%s_Frame%d.json", node, frame);
+		    send_file_data(fname, angle, duration_udp_process); // Send file to server
 		    printf("\nFrame Data Sent To Server\n\n");
-		    close(server_sockfd);
+		    
 		    frame++;
+		}
+		
+		void end_stream() {
+			memset(&buffer, 0, sizeof(buffer));
+			strcpy(buffer, exit_msg);
+			n = sendto(clientSd, buffer, MAXLINE, 0, (struct sockaddr*)&servaddr, sizeof(servaddr));
+			close(clientSd);
+			printf("Connection Closed...\n");
 		}
 };
