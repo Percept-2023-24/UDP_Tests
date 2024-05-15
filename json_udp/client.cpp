@@ -22,12 +22,22 @@ using namespace rapidjson;
 using namespace std;
 using namespace fmt;
 
+<<<<<<< HEAD
 void write_json(string fname, int angle, int range) {
+=======
+
+void write_json(char* fname, int angle, int range) {
+	const char *node = "Patrick";
+	Value s;
+	s.SetString(StringRef(node));
+
+>>>>>>> a71b46455ec0666c81b2b9e19bdb7a85099eb4e0
 	Document d; 
 	d.SetObject();
 
-	// Add data to the JSON document 
-	d.AddMember("angle", angle, d.GetAllocator()); 
+	// Add data to the JSON document
+	d.AddMember("Node", s, d.GetAllocator()); 
+	d.AddMember("angle", angle, d.GetAllocator());
 	d.AddMember("range", range, d.GetAllocator());
 
 	// Open the output file
