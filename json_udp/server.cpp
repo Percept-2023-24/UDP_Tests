@@ -18,18 +18,14 @@ using namespace std;
 using namespace fmt;
 
 int frame = 1, num_frames = 10;
+string fname, node;
+string path = "/home/aditya/Programming/Capstone/UDP_Tests/multi_node/frame_data";
+int n;
+char buffer[SIZE];
+socklen_t addr_size;
+FILE* fp;
 
 void write_file(int sockfd, struct sockaddr_in addr) {
-	string fname;
-	string node;
-	string path = "/home/aditya/Programming/Capstone/UDP_Tests/json_udp/frame_data";
-	int n;
-	char buffer[SIZE];
-	socklen_t addr_size;
-
-	// Creating a file.
-	FILE* fp;
-
 	// Receiving the data and writing it into the file.
 	while (1) {
 		addr_size = sizeof(addr);
