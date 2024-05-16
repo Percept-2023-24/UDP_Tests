@@ -26,6 +26,7 @@ class JSON_UDP {
     const char *node = "Mike";    // Patrick or Mike
     int clientSd;
     struct sockaddr_in servaddr;
+	socklen_t addr_size;
     Value s;
 	FILE* fp;
 	FILE* fp_in;
@@ -110,6 +111,13 @@ class JSON_UDP {
 		    }
 		    printf("Connected To Server!\n");
 		    return 1;
+		}
+
+		int get_frames() {
+			memset(&buffer, 0, sizeof(buffer));
+			addr_size = sizeof(servaddr);
+			n = recvfrom(clientSd, buffer, MAXLINE, 0, (struct sockaddr*)&servaddr, &addr_size);
+			return stoi(buffer);
 		}
 
 		void process(float angle, auto start_time) {

@@ -45,11 +45,13 @@ int main(int argc, char* argv[])
     vis.setWaitTime(1);
        
 	if (client_mw.socket_setup() == 1) {
-		cout << "# Frames To Capture: ";
-		int num_frames;
-		cin >> num_frames;
-		int frame = 1;
-		num_frames++;
+		// cout << "# Frames To Capture: ";
+		// int num_frames;
+		// cin >> num_frames;
+		
+        num_frames = client_mw.get_frames();
+        num_frames++;
+        int frame = 1;
 		float frame_angle;
 		
 		auto start_demo = chrono::high_resolution_clock::now();
