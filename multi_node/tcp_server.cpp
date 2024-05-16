@@ -65,9 +65,8 @@ int write_file(int sockfd, struct sockaddr_in addr) {
 void init_demo(int sockfd, struct sockaddr_in addr) {
 	cout << "# Frames To Capture: ";
 	cin >> num_frames;
-	num_frames++;
 	memset(&buffer, 0, sizeof(buffer));
-	strcpy(buffer, to_string(num_frames).c_str());
+	strcpy(buffer, to_string(++num_frames).c_str());
 	n = sendto(sockfd, buffer, MAXLINE, 0, (struct sockaddr*)&addr, sizeof(addr));
 }
 
@@ -101,7 +100,7 @@ int socket_setup() {
 		perror("Error Accepting Client Request!");
 		exit(EXIT_FAILURE);
 	}
-	printf("Connected with client!\n");
+	printf("Connected To Client!\n");
 
 	return 1;
 }
@@ -118,9 +117,7 @@ int main() {
 				close(sockfd);
 				return 0;
 			}
-			else {
-				;
-			}
+			else {;}
 		}
 	}
 	

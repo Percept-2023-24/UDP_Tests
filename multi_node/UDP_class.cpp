@@ -117,6 +117,7 @@ class JSON_UDP {
 			memset(&buffer, 0, sizeof(buffer));
 			addr_size = sizeof(servaddr);
 			n = recvfrom(clientSd, buffer, MAXLINE, 0, (struct sockaddr*)&servaddr, &addr_size);
+			printf("Capturing %s Frames...\n", buffer);
 			return stoi(buffer);
 		}
 
