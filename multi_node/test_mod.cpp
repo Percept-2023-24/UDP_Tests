@@ -58,12 +58,10 @@ int main(int argc, char* argv[])
 		auto start_demo = chrono::high_resolution_clock::now();
 		//rdm.process();
 		while(frame < num_frames) {
-			//printf("entered\n");
 			daq.process();
 			rdm.process();
 			frame_angle = *ang_visualizeptr;
 			vis.process();
-			//printf("finished\n");
 			client_mw.process(frame_angle, start_demo);
 			frame++;
 		}
