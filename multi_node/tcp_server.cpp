@@ -41,7 +41,7 @@ int write_file(int sockfd, struct sockaddr_in addr) {
 			return 0;
 		}
 
-		printf("Receiving: %s\n\n", buffer);
+		printf("Receiving: %s\n", buffer);
 
 		// Set node name based on incoming data
 		if (buffer[9] == 'M') {
@@ -66,7 +66,7 @@ void init_demo(int sockfd, struct sockaddr_in addr) {
 	cout << "# Frames To Capture: ";
 	cin >> num_frames;
 	memset(&buffer, 0, sizeof(buffer));
-	strcpy(buffer, to_string(++num_frames).c_str());
+	strcpy(buffer, to_string(num_frames).c_str());
 	n = sendto(sockfd, buffer, MAXLINE, 0, (struct sockaddr*)&addr, sizeof(addr));
 }
 
@@ -100,7 +100,7 @@ int socket_setup() {
 		perror("Error Accepting Client Request!");
 		exit(EXIT_FAILURE);
 	}
-	printf("Connected To Client!\n");
+	printf("Connected To Client!\n\n");
 
 	return 1;
 }
@@ -109,10 +109,11 @@ int main() {
 
 	if (socket_setup() == 1) {
 		init_demo(newsockfd, cliaddr);
-		printf("Running Demo...");
+		printf("Running Demo...\n\n");
 		while (1) {
 			if (write_file(newsockfd, cliaddr) == 0) {
-				print("Connection Closed...\n");
+				printf("\nDemo Complete!\n");
+				printf("Connection Closed...\n");
 				close(newsockfd);
 				close(sockfd);
 				return 0;
