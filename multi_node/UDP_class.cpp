@@ -21,6 +21,7 @@ using namespace std;
 using namespace std::chrono;
 using namespace rapidjson;
 
+// Class for multi-node server comms
 class JSON_UDP {
     int frame = 1;
     const char *node = "Mike";    // Patrick or Mike
@@ -103,13 +104,13 @@ class JSON_UDP {
 		        perror("[ERROR] socket error\n");
 		        exit(EXIT_FAILURE);
 		    }
-		    printf("Client Setup Complete...\n");
+		    printf("\nClient Setup Complete...\n");
 		    
 		    if (connect(clientSd, (sockaddr*) &servaddr, sizeof(servaddr)) < 0) {
 		    	printf("Error Connecting To Socket!\n");
 		    	exit(EXIT_FAILURE);
 		    }
-		    printf("Connected To Server!\n");
+		    printf("Connected To Server!\n\n");
 		    return 1;
 		}
 
@@ -117,7 +118,7 @@ class JSON_UDP {
 			memset(&buffer, 0, sizeof(buffer));
 			addr_size = sizeof(servaddr);
 			n = recvfrom(clientSd, buffer, MAXLINE, 0, (struct sockaddr*)&servaddr, &addr_size);
-			printf("Capturing %s Frames...\n", buffer);
+			printf("Capturing %s Frames...\n\n", buffer);
 			return stoi(buffer);
 		}
 
@@ -137,6 +138,7 @@ class JSON_UDP {
 			strcpy(buffer, exit_msg);
 			n = sendto(clientSd, buffer, MAXLINE, 0, (struct sockaddr*)&servaddr, sizeof(servaddr));
 			close(clientSd);
-			printf("Connection Closed...\n");
+			printf("Demo Complete!\n");
+			printf("Connection Closed...\n\n");
 		}
 };

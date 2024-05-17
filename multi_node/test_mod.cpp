@@ -5,6 +5,7 @@
 
 using namespace std;
 using namespace std::chrono;
+
 int main(int argc, char* argv[])
 {   
 
@@ -35,7 +36,7 @@ int main(int argc, char* argv[])
     // OTHER PARAMS
     if (argc > 1){
         if(argc != 3){
-            cout << "Incorrect number of arguments, format should be : \n    --> ./test max_SNR_THRESHOLD min_SNR_THRESHOLD \n OR --> ./test" << std::endl;
+            cout << "Incorrect number of arguments, format should be : \n    --> ./test max_SNR_THRESHOLD min_SNR_THRESHOLD \n OR --> ./test" << endl;
             return 1;
         }
         float max = stof(argv[1]);
@@ -49,19 +50,19 @@ int main(int argc, char* argv[])
 		// int num_frames;
 		// cin >> num_frames;
 		
-        num_frames = client_mw.get_frames();
+        int num_frames = client_mw.get_frames();
         num_frames++;
         int frame = 1;
 		float frame_angle;
 		
 		auto start_demo = chrono::high_resolution_clock::now();
-		rdm.process();
+		//rdm.process();
 		while(frame < num_frames) {
 			//printf("entered\n");
 			daq.process();
 			rdm.process();
-			vis.process();
 			frame_angle = *ang_visualizeptr;
+			vis.process();
 			//printf("finished\n");
 			client_mw.process(frame_angle, start_demo);
 			frame++;
