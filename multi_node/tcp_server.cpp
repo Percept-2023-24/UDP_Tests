@@ -6,6 +6,8 @@
 #include <arpa/inet.h>
 #include <typeinfo>
 #include <fmt/core.h>
+#include "rapidjson/document.h"
+#include "rapidjson/filereadstream.h"
 
 #define FMT_HEADER_ONLY
 #include <fmt/format.h>
@@ -17,18 +19,51 @@
 
 using namespace std;
 using namespace fmt;
+using namespace rapidjson;
 
 int frame_mw = 1, frame_p = 1, num_frames;
+float angle;
 string fname, node;
 string path = "/home/aditya/Programming/Capstone/UDP_Tests/multi_node/frame_data";
 int n;
 char buffer[MAXLINE];
+char readBuffer[65536];
+Document d;
 socklen_t addr_size;
 FILE* fp;
 struct sockaddr_in servaddr1, servaddr2, cliaddr1, cliaddr2;
 socklen_t len1, len2;
 int sockfd1, sockfd2, newsockfd1, newsockfd2;
 bool mw_done = false, p_done = false;
+
+void update_pos() {
+    fp = fopen(fname.c_str(), "rb"); // Open the file 
+  
+    // Check if the file was opened successfully 
+    if (!fp) { 
+		perror("Error: unable to open file");
+        exit(EXIT_FAILURE);
+    }
+  
+    // Read the file into a buffer and parse JSON 
+	memset(&readBuffer, 0, sizeof(readBuffer));
+    FileReadStream is(fp, readBuffer, sizeof(readBuffer)); 
+    d.ParseStream(is);
+  
+    // Check if the document is valid 
+    if (d.HasParseError()) { 
+        perror("Error: failed to parse JSON document");
+        fclose(fp); 
+        exit(EXIT_FAILURE);
+    }   
+    fclose(fp);
+
+	angle = d["Angle"].GetFloat();	// Parse angle from JSON
+	//range = d["Range"].GetFloat();	// Parse range from JSON
+
+	//depending on which node is being analyzed (Patrick or Mike) do processing to update position
+
+}
 
 void write_file(int sockfd, struct sockaddr_in addr) {
 	// Receiving the data and writing it into the file.
