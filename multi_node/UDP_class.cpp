@@ -34,7 +34,7 @@ class JSON_UDP {
 	string fname;
 	char buffer[MAXLINE];
 	int n;
-	const char *exit_msg = "Demo Complete";
+	const char *exit_msg = "Mike Demo Complete";
     
 	public:
 		void write_json(string fname, float angle, auto duration) {
