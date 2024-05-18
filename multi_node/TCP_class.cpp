@@ -22,7 +22,7 @@ using namespace std::chrono;
 using namespace rapidjson;
 
 // Class for multi-node server comms
-class JSON_UDP {
+class JSON_TCP {
     int frame = 1;
     const char *node = "Mike";    // Patrick or Mike
     int clientSd;
@@ -32,6 +32,7 @@ class JSON_UDP {
 	FILE* fp;
 	FILE* fp_in;
 	string fname;
+	const char *path = "/home/fusionsense/repos/AVR/RadarPipeline/test/non_thread/frame_data";
 	char buffer[MAXLINE];
 	int n;
 	const char *exit_msg = "Mike Demo Complete";
@@ -126,7 +127,7 @@ class JSON_UDP {
 		    auto stop = chrono::high_resolution_clock::now();
 		    auto duration_udp_process = duration_cast<milliseconds>(stop - start_time);		    
 		    
-			fname = format("%s_Frame%d.json", node, frame);
+			fname = format("%s/%s_Frame%d.json", path, node, frame);
 		    send_file_data(fname, angle, duration_udp_process); // Send file to server
 		    printf("\nFrame Data Sent To Server\n\n");
 		    
@@ -142,3 +143,4 @@ class JSON_UDP {
 			printf("Connection Closed...\n\n");
 		}
 };
+

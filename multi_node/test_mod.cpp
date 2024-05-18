@@ -15,7 +15,7 @@ int main(int argc, char* argv[])
     RangeDoppler rdm("blackman");
 
     Visualizer vis(INPUT_SIZE,OUTPUT_SIZE);
-	JSON_UDP client_mw;
+	JSON_TCP client_mw;
 
     // BUFFER POINTER INITIATION
     uint16_t *in_bufferptr    = daq.getBufferPointer();
